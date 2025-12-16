@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ASA Devs | Firebase Cloud Portal</title>
-    <meta name="description" content="Official Training and Placement Portal for TSDC.">
+    <title>ASA Devs | Portal</title>
+    <meta name="description" content="Official Training and Placement Portal.">
     <link rel="icon" type="image/png" href="logo.png">
-    <link rel="apple-touch-icon" href="logo.png">
-    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2563eb">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -35,112 +33,84 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
         .section-view { display: none; }
         .section-view.active { display: block; animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        .admin-control, .admin-view-only { display: none; }
+        .admin-control, .admin-view-only { display: none !important; }
         body.is-admin .admin-control { display: inline-flex !important; }
-        body.is-admin .admin-view-only { display: grid; }
+        body.is-admin .admin-view-only { display: grid !important; }
         body.is-admin .student-view-only { display: none !important; }
         [contenteditable="true"]:focus { outline: 2px solid #2563eb; background: rgba(37, 99, 235, 0.05); }
         .a4-page { width: 210mm; min-height: 297mm; background: white; margin: 0 auto; display: flex; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
         #global-loader { display: flex; }
         #global-loader.hidden { display: none; }
         
-        /* Custom UI Tweaks */
-        ::-webkit-scrollbar { width: 8px; }
+        /* Scanner Overlay Animation */
+        .scan-line { width: 100%; height: 3px; background: #ef4444; position: absolute; animation: scan 2.5s infinite linear; top: 0; box-shadow: 0 0 4px red; }
+        @keyframes scan { 0% { top: 0%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+        
+        /* UI Polish */
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
         .card-3d { perspective: 1000px; transition: transform 0.3s cubic-bezier(0.23, 1, 0.320, 1); }
-        .card-3d:hover { transform: translateY(-8px) rotateX(5deg) rotateZ(1deg) scale(1.02); }
-        button { position: relative; transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1); transform-style: preserve-3d; }
-        button:hover { transform: translateZ(8px) scale(1.05); }
-        button:active { transform: translateZ(2px) scale(0.98); }
-        .nav-item { position: relative; transform-style: preserve-3d; transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1); }
-        .nav-item:hover { transform: rotateY(8deg) translateZ(10px); }
-        .nav-item::before { content: ''; position: absolute; inset: 0; background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0)); border-radius: inherit; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
-        .nav-item:hover::before { opacity: 1; }
-        .stat-card { perspective: 1200px; transform-style: preserve-3d; transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1); }
-        .stat-card:hover { transform: translateY(-12px) rotateX(8deg) rotateZ(-2deg); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
-        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
-        .grid-item { transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1); transform-style: preserve-3d; }
-        .grid-item:hover { animation: float 0.6s ease-in-out infinite; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.2)); }
-        input, textarea, select { transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1); transform-style: preserve-3d; }
-        input:focus, textarea:focus, select:focus { transform: scale(1.02) translateZ(4px); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2), 0 10px 20px rgba(59, 130, 246, 0.1); }
-        .glow-on-hover:hover { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5), 0 0 40px rgba(59, 130, 246, 0.3); }
-        html { scroll-behavior: smooth; }
-        .shadow-3d { box-shadow: 0 10px 30px rgba(0,0,0,0.1), 0 1px 8px rgba(0,0,0,0.06); transition: box-shadow 0.3s cubic-bezier(0.23, 1, 0.320, 1); }
-        .shadow-3d:hover { box-shadow: 0 20px 40px rgba(0,0,0,0.15), 0 3px 12px rgba(0,0,0,0.1); }
-        .hidden-important { display: none !important; }
+        .card-3d:hover { transform: translateY(-5px) scale(1.01); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
     </style>
 </head>
-<body class="text-slate-800 h-screen overflow-hidden flex flex-col antialiased relative">
-
-    <div class="fixed inset-0 z-[-1] overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop" 
-             class="absolute inset-0 w-full h-full object-cover filter blur-[6px] scale-105" 
-             alt="Tech Background">
-        <div class="absolute inset-0 bg-slate-50/70 backdrop-blur-[2px]"></div>
-    </div>
+<body class="text-slate-800 h-screen overflow-hidden flex flex-col antialiased relative bg-slate-50">
 
     <div id="global-loader" class="fixed inset-0 z-[9999] bg-white flex items-center justify-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900"></div>
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
     </div>
 
-    <div id="image-viewer" class="hidden fixed inset-0 z-[400] bg-black/90 flex items-center justify-center p-4 backdrop-blur-sm transition-all duration-300" onclick="closeImageView()">
-        <button onclick="closeImageView()" class="absolute top-6 right-6 text-white hover:text-gray-300 transition transform hover:scale-110 z-50">
-            <i data-lucide="x" class="w-10 h-10"></i>
-        </button>
-        <img id="full-image" src="" class="max-w-full max-h-[90vh] rounded-xl shadow-2xl object-contain transform transition-transform duration-300 scale-95" onclick="event.stopPropagation()">
+    <div id="image-viewer" class="hidden fixed inset-0 z-[400] bg-black/95 flex items-center justify-center p-4 backdrop-blur-md transition-all" onclick="closeImageView()">
+        <button onclick="closeImageView()" class="absolute top-6 right-6 text-white hover:text-gray-300 transition z-50"><i data-lucide="x" class="w-10 h-10"></i></button>
+        <img id="full-image" src="" class="max-w-full max-h-[90vh] rounded-lg shadow-2xl object-contain" onclick="event.stopPropagation()">
     </div>
 
     <div id="mobile-menu" class="hidden fixed inset-0 z-[300]">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="toggleMobileMenu()"></div>
-        <div class="absolute inset-y-0 left-0 w-3/4 max-w-xs bg-slate-900 shadow-2xl flex flex-col transform transition-transform duration-300">
-            <div class="h-16 flex items-center justify-between px-6 border-b border-white/10">
-                <div class="flex items-center gap-3">
-                    <img src="logo.png" class="w-8 h-8 object-contain">
-                    <span class="text-white font-bold text-xl">ASA Devs.</span>
-                </div>
+        <div class="absolute inset-y-0 left-0 w-3/4 max-w-xs bg-slate-900 shadow-2xl flex flex-col transition-transform">
+            <div class="h-20 flex items-center justify-between px-6 border-b border-white/10">
+                <button onclick="navTo('home')" class="flex items-center gap-3 text-white font-bold text-xl"><img src="logo.png" class="w-8 h-8 object-contain"> ASA Devs.</button>
                 <button onclick="toggleMobileMenu()" class="text-slate-400 hover:text-white"><i data-lucide="x"></i></button>
             </div>
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
                 <button onclick="navTo('home')" class="nav-item active w-full flex items-center px-4 py-4 rounded-xl text-slate-400 hover:bg-white/10 hover:text-white transition"><i data-lucide="layout-dashboard" class="w-5 h-5 mr-3"></i> Dashboard</button>
                 <button onclick="navTo('resources')" class="nav-item w-full flex items-center px-4 py-4 rounded-xl text-slate-400 hover:bg-white/10 hover:text-white transition"><i data-lucide="folder" class="w-5 h-5 mr-3"></i> Library</button>
-                <button onclick="navTo('courses')" class="nav-item w-full flex items-center px-4 py-4 rounded-xl text-slate-400 hover:bg-white/10 hover:text-white transition"><i data-lucide="book-open" class="w-5 h-5 mr-3"></i> Course Training</button>
+                <button onclick="navTo('courses')" class="nav-item w-full flex items-center px-4 py-4 rounded-xl text-slate-400 hover:bg-white/10 hover:text-white transition"><i data-lucide="book-open" class="w-5 h-5 mr-3"></i> Training</button>
                 <button onclick="navTo('placement')" class="nav-item w-full flex items-center px-4 py-4 rounded-xl text-slate-400 hover:bg-white/10 hover:text-white transition"><i data-lucide="briefcase" class="w-5 h-5 mr-3"></i> Placement</button>
-                <button onclick="navTo('events')" class="nav-item w-full flex items-center px-4 py-4 rounded-xl text-slate-400 hover:bg-white/10 hover:text-white transition"><i data-lucide="calendar" class="w-5 h-5 mr-3"></i> Events/Seminars</button>
-                <button onclick="navTo('activity')" class="nav-item w-full student-view-only flex items-center px-4 py-4 rounded-xl text-slate-400 hover:bg-white/10 hover:text-white transition"><i data-lucide="activity" class="w-5 h-5 mr-3"></i> My Activity</button>
-                
+                <button onclick="navTo('events')" class="nav-item w-full flex items-center px-4 py-4 rounded-xl text-slate-400 hover:bg-white/10 hover:text-white transition"><i data-lucide="calendar" class="w-5 h-5 mr-3"></i> Events</button>
+                <button onclick="navTo('activity')" class="nav-item w-full student-view-only flex items-center px-4 py-4 rounded-xl text-slate-400 hover:bg-white/10 hover:text-white transition"><i data-lucide="activity" class="w-5 h-5 mr-3"></i> Activity</button>
                 <button onclick="navTo('profile')" class="nav-item w-full student-view-only flex items-center px-4 py-4 rounded-xl text-slate-400 hover:bg-white/10 hover:text-white transition mt-4 border-t border-white/10"><i data-lucide="user" class="w-5 h-5 mr-3"></i> Profile</button>
             </nav>
             <div class="p-6 border-t border-white/10 bg-slate-950">
-                 <button onclick="handleLogout()" class="flex items-center text-red-400 font-bold"><i data-lucide="log-out" class="w-5 h-5 mr-2"></i> Sign Out</button>
+                <button onclick="handleLogout()" class="flex items-center text-red-400 font-bold"><i data-lucide="log-out" class="w-5 h-5 mr-2"></i> Sign Out</button>
             </div>
         </div>
     </div>
 
     <div id="auth-view" class="fixed inset-0 z-[100] flex bg-transparent">
-        <div class="hidden lg:flex lg:w-1/2 bg-slate-900/90 backdrop-blur-md items-center justify-center relative overflow-hidden flex-col">
-            <img src="logo.png" alt="TSDC Logo" class="w-32 h-32 object-contain mb-6 animate-fade-up">
+        <div class="hidden lg:flex lg:w-1/2 bg-slate-900/90 backdrop-blur-xl items-center justify-center flex-col relative overflow-hidden text-white">
+            <div class="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20"></div>
+            <img src="logo.png" class="w-32 h-32 object-contain mb-6 animate-fade-up relative z-10">
             <div class="text-center z-10 p-10">
-                <h1 class="text-6xl font-bold text-white mb-4">TSDC.</h1>
-                <p class="text-slate-400 text-xl">Student Training & Placement Portal</p>
+                <h1 class="text-6xl font-bold mb-4 tracking-tight">TSDC.</h1>
+                <p class="text-slate-400 text-xl font-light">Training & Placement Portal</p>
             </div>
         </div>
-        <div class="w-full lg:w-1/2 flex items-center justify-center p-6 bg-white/60 backdrop-blur-sm">
-            <div class="w-full max-w-md bg-white/80 p-8 rounded-3xl shadow-xl border border-white/50">
+        <div class="w-full lg:w-1/2 flex items-center justify-center p-6 bg-white/60 backdrop-blur-md">
+            <div class="w-full max-w-md bg-white/90 p-8 rounded-3xl shadow-2xl border border-white/50">
+                
                 <div id="role-selector" class="animate-fade-up">
                     <div class="lg:hidden flex justify-center mb-8"><img src="logo.png" class="w-20 h-20 object-contain"></div>
-                    <h2 class="text-3xl font-bold text-slate-900 mb-2 text-center">Welcome Back</h2>
-                    <p class="text-slate-500 mb-8 text-center">Select your access level</p>
+                    <h2 class="text-3xl font-bold text-slate-900 mb-2 text-center">Welcome</h2>
+                    <p class="text-slate-500 mb-8 text-center">Select access level</p>
                     <div class="space-y-4">
-                        <button onclick="setAuthMode('student')" class="w-full p-6 border-2 border-slate-100 rounded-2xl hover:border-blue-500 hover:bg-blue-50 transition flex items-center gap-4 group bg-white">
+                        <button onclick="setAuthMode('student')" class="w-full p-5 border-2 border-slate-100 rounded-2xl hover:border-blue-500 hover:bg-blue-50 transition flex items-center gap-4 group bg-white">
                             <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center"><i data-lucide="graduation-cap"></i></div>
-                            <div class="text-left"><h3 class="font-bold text-lg">Student</h3><p class="text-sm text-slate-500">Log in or Register</p></div>
+                            <div class="text-left"><h3 class="font-bold text-lg">Student</h3><p class="text-sm text-slate-500">Log in using Roll No</p></div>
                         </button>
-                        <button onclick="setAuthMode('teacher')" class="w-full p-6 border-2 border-slate-100 rounded-2xl hover:border-slate-800 hover:bg-slate-50 transition flex items-center gap-4 group bg-white">
+                        <button onclick="setAuthMode('admin')" class="w-full p-5 border-2 border-slate-100 rounded-2xl hover:border-slate-800 hover:bg-slate-50 transition flex items-center gap-4 group bg-white">
                             <div class="w-12 h-12 bg-slate-100 text-slate-700 rounded-xl flex items-center justify-center"><i data-lucide="shield"></i></div>
-                            <div class="text-left"><h3 class="font-bold text-lg">Faculty Admin</h3><p class="text-sm text-slate-500">Restricted Access</p></div>
+                            <div class="text-left"><h3 class="font-bold text-lg">Faculty / Scanner</h3><p class="text-sm text-slate-500">Log in using Email</p></div>
                         </button>
                     </div>
                 </div>
@@ -148,29 +118,23 @@
                 <div id="login-form-container" class="hidden animate-fade-up">
                     <button onclick="resetAuth()" class="mb-6 text-sm font-bold text-slate-400 hover:text-slate-800 flex items-center gap-1"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
                     <h2 class="text-3xl font-bold text-slate-900 mb-2" id="login-title">Login</h2>
-                    <p class="text-slate-500 mb-6" id="login-subtitle">Enter your details</p>
+                    <p class="text-slate-500 mb-6" id="login-subtitle">Enter credentials</p>
                     <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
                         <input type="hidden" id="login-type">
-                        <div><label class="text-xs font-bold uppercase text-slate-500">Student ID or Email</label><input type="text" id="auth-email" placeholder="e.g. 202402001" class="w-full p-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"></div>
-                        
                         <div>
-                            <label class="text-xs font-bold uppercase text-slate-500">Password</label>
+                            <label class="text-xs font-bold uppercase text-slate-500 block mb-1" id="email-label">ID / Email</label>
+                            <input type="text" id="auth-input" class="w-full p-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold uppercase text-slate-500 block mb-1">Password</label>
                             <div class="relative">
-                                <input type="password" id="auth-pass" class="w-full p-3 pr-12 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition">
-                                <button type="button" onclick="togglePassword('auth-pass', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 z-10">
-                                    <i data-lucide="eye" class="w-5 h-5"></i>
-                                </button>
+                                <input type="password" id="auth-pass" class="w-full p-3 pr-12 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition">
+                                <button type="button" onclick="togglePassword('auth-pass', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"><i data-lucide="eye" class="w-5 h-5"></i></button>
                             </div>
                         </div>
-
-                        <div id="register-hint" class="text-right hidden">
-                            <a href="#" onclick="toggleRegisterMode()" class="text-xs text-blue-600 font-bold">New student? Register here</a>
-                        </div>
-                        <div id="login-hint" class="text-right hidden">
-                            <a href="#" onclick="toggleRegisterMode()" class="text-xs text-blue-600 font-bold">Have an account? Login</a>
-                        </div>
-
-                        <button type="submit" id="auth-btn-text" class="w-full bg-slate-900 text-white font-bold py-3.5 rounded-xl hover:bg-slate-800 transition shadow-lg">Access Portal</button>
+                        <div id="register-hint" class="text-right hidden"><a href="#" onclick="toggleRegisterMode()" class="text-xs text-blue-600 font-bold hover:underline">New Student? Register</a></div>
+                        <div id="login-hint" class="text-right hidden"><a href="#" onclick="toggleRegisterMode()" class="text-xs text-blue-600 font-bold hover:underline">Have account? Login</a></div>
+                        <button type="submit" id="auth-btn-text" class="w-full bg-slate-900 text-white font-bold py-3.5 rounded-xl hover:bg-slate-800 transition shadow-lg mt-2">Access Portal</button>
                     </form>
                 </div>
             </div>
@@ -181,52 +145,72 @@
         <div class="bg-white p-8 rounded-3xl max-w-md w-full shadow-2xl animate-fade-up">
             <h2 class="text-2xl font-bold mb-2">Profile Setup</h2>
             <p class="text-slate-500 mb-6">Complete your profile to continue.</p>
-            <div class="space-y-3">
+            <div class="space-y-4">
                 <input id="ob-name" placeholder="Full Name" class="w-full p-3 border rounded-xl outline-none focus:border-blue-500 transition">
-                
                 <select id="ob-dept" class="w-full p-3 border rounded-xl bg-white outline-none focus:border-blue-500 transition">
                     <option value="" disabled selected>Select Department</option>
-                    <option value="BSC IT">B.Sc. IT</option>
-                    <option value="BSC CS">B.Sc. Computer Science</option>
-                    <option value="BSC DS">B.Sc. Data Science</option>
-                    <option value="BAMMC">BAMMC</option>
-                    <option value="BCOM">B.Com / B.Com MS</option>
-                    <option value="BAF">BAF</option>
-                    <option value="BMS">BMS</option>
-                    <option value="MSC">M.Sc.</option>
-                    <option value="BSC">B.Sc. General</option>
+                    <option>BSC IT</option><option>BSC CS</option><option>BSC DS</option><option>BAMMC</option><option>BCOM</option><option>BAF</option><option>BMS</option><option>MSC</option><option>BSC</option>
                 </select>
-
                 <select id="ob-year" class="w-full p-3 border rounded-xl bg-white outline-none focus:border-blue-500 transition">
                     <option value="" disabled selected>Select Year</option>
-                    <option value="FY">First Year (FY)</option>
-                    <option value="SY">Second Year (SY)</option>
-                    <option value="TY">Third Year (TY)</option>
-                    <option value="MSC 1">M.Sc. Part 1</option>
-                    <option value="MSC 2">M.Sc. Part 2</option>
+                    <option>FY</option><option>SY</option><option>TY</option><option>MSC 1</option><option>MSC 2</option>
                 </select>
+                <button onclick="saveProfileData()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 shadow-lg">Initialize</button>
+            </div>
+        </div>
+    </div>
 
-                <button onclick="saveProfileData()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 mt-2 shadow-lg transform active:scale-95 transition">Initialize Dashboard</button>
+    <div id="scanner-interface" class="hidden fixed inset-0 z-[5000] bg-slate-900 flex flex-col">
+        <div class="h-16 bg-black/60 backdrop-blur-md border-b border-white/10 flex items-center justify-between px-6 shrink-0 absolute top-0 w-full z-10">
+            <div class="flex items-center gap-3">
+                <div class="w-3 h-3 rounded-full bg-red-500 animate-pulse shadow-[0_0_10px_red]"></div>
+                <span class="text-white font-bold tracking-widest text-sm">GATEKEEPER MODE</span>
+            </div>
+            <button onclick="handleLogout()" class="text-xs font-bold text-red-400 border border-red-400/30 px-3 py-1.5 rounded hover:bg-red-400/10 transition">LOGOUT</button>
+        </div>
+        <div class="flex-1 flex flex-col relative overflow-hidden bg-black">
+            <div id="dedicated-reader" class="w-full h-full object-cover"></div>
+            <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+                <div class="w-64 h-64 border-2 border-white/30 rounded-3xl relative shadow-[0_0_100px_rgba(0,0,0,0.5)]">
+                    <div class="scan-line"></div>
+                    <div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-blue-500 rounded-tl-2xl"></div>
+                    <div class="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-blue-500 rounded-tr-2xl"></div>
+                    <div class="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-blue-500 rounded-bl-2xl"></div>
+                    <div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-blue-500 rounded-br-2xl"></div>
+                </div>
+            </div>
+            <div id="scan-status-panel" class="absolute bottom-0 inset-x-0 bg-white rounded-t-3xl p-8 transform transition-transform duration-300 translate-y-full z-20 shadow-2xl">
+                <div class="flex flex-col items-center text-center">
+                    <div id="status-icon" class="w-16 h-16 rounded-full flex items-center justify-center mb-4 text-white shadow-lg text-3xl"></div>
+                    <h2 id="status-title" class="text-2xl font-bold text-slate-900 mb-1">Checking...</h2>
+                    <p id="status-desc" class="text-slate-500 mb-6">Verifying ticket details...</p>
+                    <div id="student-details" class="bg-slate-50 w-full p-4 rounded-2xl mb-6 text-left border hidden">
+                        <div class="flex justify-between items-center mb-2">
+                            <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Student</p>
+                            <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-1 rounded">VALID</span>
+                        </div>
+                        <p id="sd-name" class="font-bold text-slate-900 text-lg leading-tight">Name</p>
+                        <p id="sd-id" class="text-sm font-mono text-slate-500">ID: 000</p>
+                    </div>
+                    <button onclick="resetScannerUI()" class="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl hover:bg-slate-800 transition active:scale-95">Scan Next Ticket</button>
+                </div>
             </div>
         </div>
     </div>
 
     <div id="app-interface" class="hidden flex h-screen bg-transparent">
-        
         <aside class="hidden md:flex w-64 flex-col bg-slate-900/95 backdrop-blur-xl text-slate-400 h-full fixed z-20 shadow-2xl transition-all duration-300">
-            <div class="h-20 flex items-center px-6 gap-3 border-b border-white/10 shrink-0">
-                <img src="logo.png" alt="TSDC Logo" class="w-8 h-8 object-contain">
+            <button onclick="navTo('home')" class="h-20 flex items-center px-6 gap-3 border-b border-white/10 shrink-0 hover:bg-white/5 transition w-full text-left cursor-pointer">
+                <img src="logo.png" class="w-8 h-8 object-contain">
                 <span class="text-white font-bold text-xl tracking-tight">ASA Devs.</span>
-            </div>
+            </button>
             <nav class="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
                 <button id="nav-home" onclick="navTo('home')" class="nav-item active w-full flex items-center px-3 py-3 rounded-lg hover:bg-white/5 hover:text-white transition"><i data-lucide="layout-dashboard" class="w-5 h-5 mr-3"></i> Dashboard</button>
                 <button id="nav-resources" onclick="navTo('resources')" class="nav-item w-full flex items-center px-4 py-4 rounded-xl text-slate-400 hover:bg-white/10 hover:text-white transition"><i data-lucide="folder" class="w-5 h-5 mr-3"></i> Library</button>
-                <button id="nav-courses" onclick="navTo('courses')" class="nav-item w-full flex items-center px-4 py-4 rounded-xl text-slate-400 hover:bg-white/10 hover:text-white transition"><i data-lucide="book-open" class="w-5 h-5 mr-3"></i> Course Training</button>
+                <button id="nav-courses" onclick="navTo('courses')" class="nav-item w-full flex items-center px-4 py-4 rounded-xl text-slate-400 hover:bg-white/10 hover:text-white transition"><i data-lucide="book-open" class="w-5 h-5 mr-3"></i> Training</button>
                 <button id="nav-placement" onclick="navTo('placement')" class="nav-item w-full flex items-center px-4 py-4 rounded-xl text-slate-400 hover:bg-white/10 hover:text-white transition"><i data-lucide="briefcase" class="w-5 h-5 mr-3"></i> Placement</button>
-                <button id="nav-events" onclick="navTo('events')" class="nav-item w-full flex items-center px-4 py-4 rounded-xl text-slate-400 hover:bg-white/10 hover:text-white transition"><i data-lucide="calendar" class="w-5 h-5 mr-3"></i> Events/Seminars</button>
-                
-                <button id="nav-activity" onclick="navTo('activity')" class="nav-item w-full student-view-only flex items-center px-4 py-4 rounded-xl text-slate-400 hover:bg-white/10 hover:text-white transition"><i data-lucide="activity" class="w-5 h-5 mr-3"></i> My Activity</button>
-                
+                <button id="nav-events" onclick="navTo('events')" class="nav-item w-full flex items-center px-4 py-4 rounded-xl text-slate-400 hover:bg-white/10 hover:text-white transition"><i data-lucide="calendar" class="w-5 h-5 mr-3"></i> Events</button>
+                <button id="nav-activity" onclick="navTo('activity')" class="nav-item w-full student-view-only flex items-center px-4 py-4 rounded-xl text-slate-400 hover:bg-white/10 hover:text-white transition"><i data-lucide="activity" class="w-5 h-5 mr-3"></i> Activity</button>
                 <button id="nav-profile" onclick="navTo('profile')" class="nav-item w-full student-view-only flex items-center px-4 py-4 rounded-xl text-slate-400 hover:bg-white/10 hover:text-white transition mt-4 border-t border-white/10"><i data-lucide="user" class="w-5 h-5 mr-3"></i> Profile</button>
             </nav>
             <div class="p-4 border-t border-white/10 shrink-0">
@@ -235,83 +219,54 @@
             </div>
         </aside>
 
-        <main class="flex-1 md:ml-64 flex flex-col h-full overflow-hidden relative bg-slate-50/50">
-
-            <header class="md:hidden h-16 bg-white/80 backdrop-blur-md border-b flex items-center justify-between px-4 shrink-0 z-30 sticky top-0 shadow-sm">
-                <div class="flex items-center gap-3">
-                    <img src="logo.png" alt="Logo" class="w-8 h-8 object-contain">
-                    <span class="font-bold text-xl">ASA Devs.</span>
+        <main class="flex-1 md:ml-64 flex flex-col h-full overflow-hidden relative bg-slate-50">
+            <header class="h-20 bg-white/80 backdrop-blur-md border-b flex items-center justify-between px-6 md:px-10 sticky top-0 z-30 shrink-0">
+                <div class="flex items-center gap-3 md:hidden">
+                    <button onclick="navTo('home')" class="flex items-center gap-2"><img src="logo.png" class="w-8 h-8"><span class="font-bold text-xl">ASA Devs.</span></button>
                 </div>
-                <button onclick="toggleMobileMenu()" class="p-2 active:bg-slate-100 rounded-lg text-slate-800 hover:bg-slate-200 transition">
-                    <i data-lucide="menu" class="w-7 h-7"></i>
-                </button>
-            </header>
-
-            <header class="hidden md:flex h-20 bg-white/80 backdrop-blur-md border-b items-center justify-between px-10 sticky top-0 z-30">
-                <div>
+                <div class="hidden md:block">
                     <h1 id="header-title" class="text-2xl font-bold text-slate-900">Dashboard</h1>
                     <p id="header-subtitle" class="text-sm text-slate-500 hidden">Manage system</p>
                 </div>
-                <div id="header-action">
-                    </div>
+                <div class="flex items-center gap-4">
+                    <div id="header-action"></div>
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-2 bg-slate-100 rounded-lg"><i data-lucide="menu"></i></button>
+                </div>
             </header>
 
             <div class="flex-1 overflow-y-auto p-6 md:p-10 scroll-smooth">
-                
                 <div id="home" class="section-view active max-w-6xl mx-auto">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
                         <div><h1 class="text-3xl font-bold text-slate-900">Hello, <span id="home-name">User</span></h1><p class="text-slate-600" id="home-subtitle">Welcome to your cloud dashboard.</p></div>
                         <span class="admin-view-only bg-slate-900 text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Faculty Mode</span>
                     </div>
-                    
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                        <button onclick="navTo('resources')" class="stat-card text-left w-full bg-white/80 backdrop-blur-sm p-6 rounded-2xl border border-white/50 shadow-3d group cursor-pointer active:scale-95">
-                            <div class="text-slate-500 text-xs uppercase font-bold group-hover:text-blue-600 transition-colors">Total Resources</div>
-                            <div class="text-3xl font-bold mt-1 text-slate-900" id="stat-res">--</div>
-                        </button>
-                        <button onclick="navTo('courses')" class="stat-card text-left w-full bg-white/80 backdrop-blur-sm p-6 rounded-2xl border border-white/50 shadow-3d group cursor-pointer active:scale-95">
-                            <div class="text-slate-500 text-xs uppercase font-bold group-hover:text-blue-600 transition-colors">Active Course Training</div>
-                            <div class="text-3xl font-bold mt-1 text-slate-900" id="stat-course">--</div>
-                        </button>
-                        <button onclick="navTo('placement')" class="stat-card text-left w-full bg-white/80 backdrop-blur-sm p-6 rounded-2xl border border-white/50 shadow-3d group cursor-pointer active:scale-95">
-                            <div class="text-slate-500 text-xs uppercase font-bold group-hover:text-blue-600 transition-colors">Job Postings</div>
-                            <div class="text-3xl font-bold mt-1 text-slate-900" id="stat-job">--</div>
-                        </button>
+                        <button onclick="navTo('resources')" class="stat-card text-left w-full bg-white p-6 rounded-2xl border shadow-sm hover:shadow-md cursor-pointer group"><div class="text-slate-500 text-xs uppercase font-bold group-hover:text-blue-600">Total Resources</div><div class="text-3xl font-bold mt-1 text-slate-900" id="stat-res">--</div></button>
+                        <button onclick="navTo('courses')" class="stat-card text-left w-full bg-white p-6 rounded-2xl border shadow-sm hover:shadow-md cursor-pointer group"><div class="text-slate-500 text-xs uppercase font-bold group-hover:text-blue-600">Active Trainings</div><div class="text-3xl font-bold mt-1 text-slate-900" id="stat-course">--</div></button>
+                        <button onclick="navTo('placement')" class="stat-card text-left w-full bg-white p-6 rounded-2xl border shadow-sm hover:shadow-md cursor-pointer group"><div class="text-slate-500 text-xs uppercase font-bold group-hover:text-blue-600">Job Postings</div><div class="text-3xl font-bold mt-1 text-slate-900" id="stat-job">--</div></button>
                     </div>
                 </div>
 
                 <div id="resources" class="section-view max-w-6xl mx-auto">
-                    <div class="md:hidden flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold">Library</h2>
-                        <button onclick="openModal('resources')" class="admin-control bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg">+ Add</button>
-                    </div>
+                    <div class="md:hidden flex justify-between items-center mb-6"><h2 class="text-2xl font-bold">Library</h2><button onclick="openModal('resources')" class="admin-control bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg">+ Add</button></div>
                     <input onkeyup="filterGrid('grid-resources', this.value)" placeholder="Search resources..." class="w-full p-3 border rounded-xl mb-4 bg-white/50 backdrop-blur outline-none focus:ring-2 focus:ring-blue-500">
                     <div id="grid-resources" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
                 </div>
 
                 <div id="courses" class="section-view max-w-6xl mx-auto">
-                    <div class="md:hidden flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold">Course Training</h2>
-                        <button onclick="openModal('courses')" class="admin-control bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg">+ Add</button>
-                    </div>
+                    <div class="md:hidden flex justify-between items-center mb-6"><h2 class="text-2xl font-bold">Training</h2><button onclick="openModal('courses')" class="admin-control bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg">+ Add</button></div>
                     <input onkeyup="filterGrid('grid-courses', this.value)" placeholder="Search courses..." class="w-full p-3 border rounded-xl mb-4 bg-white/50 backdrop-blur outline-none focus:ring-2 focus:ring-blue-500">
                     <div id="grid-courses" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
                 </div>
 
                 <div id="placement" class="section-view max-w-6xl mx-auto">
-                    <div class="md:hidden flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold">Placement</h2>
-                        <button onclick="openModal('placement')" class="admin-control bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg">+ Add</button>
-                    </div>
+                    <div class="md:hidden flex justify-between items-center mb-6"><h2 class="text-2xl font-bold">Placement</h2><button onclick="openModal('placement')" class="admin-control bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg">+ Add</button></div>
                     <input onkeyup="filterGrid('grid-placement', this.value)" placeholder="Search jobs..." class="w-full p-3 border rounded-xl mb-4 bg-white/50 backdrop-blur outline-none focus:ring-2 focus:ring-blue-500">
                     <div id="grid-placement" class="grid grid-cols-1 gap-3"></div>
                 </div>
 
                 <div id="events" class="section-view max-w-6xl mx-auto">
-                    <div class="md:hidden flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold">Events/Seminars</h2>
-                        <button onclick="openModal('events')" class="admin-control bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg">+ Add</button>
-                    </div>
+                    <div class="md:hidden flex justify-between items-center mb-6"><h2 class="text-2xl font-bold">Events</h2><button onclick="openModal('events')" class="admin-control bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg">+ Add</button></div>
                     <input onkeyup="filterGrid('grid-events', this.value)" placeholder="Search events..." class="w-full p-3 border rounded-xl mb-4 bg-white/50 backdrop-blur outline-none focus:ring-2 focus:ring-blue-500">
                     <div id="grid-events" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
                 </div>
@@ -319,99 +274,39 @@
                 <div id="activity" class="section-view max-w-6xl mx-auto">
                     <h2 class="text-2xl font-bold mb-6">My Activity</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-white/90 p-6 rounded-2xl border shadow-sm">
-                            <h3 class="font-bold text-lg mb-4 flex items-center"><i data-lucide="ticket" class="w-5 h-5 mr-2 text-blue-600"></i> Event Registrations</h3>
-                            <div id="my-events-list" class="space-y-3"></div>
-                        </div>
-                        <div class="bg-white/90 p-6 rounded-2xl border shadow-sm">
-                            <h3 class="font-bold text-lg mb-4 flex items-center"><i data-lucide="award" class="w-5 h-5 mr-2 text-green-600"></i> Completed Courses</h3>
-                            <div id="my-courses-list" class="space-y-3"></div>
-                        </div>
+                        <div class="bg-white p-6 rounded-2xl border shadow-sm"><h3 class="font-bold text-lg mb-4 flex items-center"><i data-lucide="ticket" class="w-5 h-5 mr-2 text-blue-600"></i> Event Registrations</h3><div id="my-events-list" class="space-y-3"></div></div>
+                        <div class="bg-white p-6 rounded-2xl border shadow-sm"><h3 class="font-bold text-lg mb-4 flex items-center"><i data-lucide="award" class="w-5 h-5 mr-2 text-green-600"></i> Completed Courses</h3><div id="my-courses-list" class="space-y-3"></div></div>
                     </div>
                 </div>
 
                 <div id="profile" class="section-view max-w-4xl mx-auto">
-                    <div class="bg-white/90 backdrop-blur-sm p-8 rounded-2xl border shadow-sm mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div class="bg-white p-8 rounded-2xl border shadow-sm mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                         <div><h1 class="text-3xl font-bold mb-1" id="prof-name">User</h1><p class="text-slate-500" id="prof-meta">Department • Year</p></div>
                         <button onclick="openResume()" class="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-slate-800 w-full md:w-auto">Resume Builder</button>
                     </div>
-                    <div class="bg-white/90 backdrop-blur-sm p-8 rounded-2xl border shadow-sm mb-6">
-                        <div class="flex justify-between mb-4"><h3 class="font-bold">Bio</h3><button onclick="document.getElementById('prof-bio').focus()" class="text-blue-600 text-xs font-bold">EDIT</button></div>
-                        <p id="prof-bio" contenteditable="true" class="text-slate-600 p-2 -ml-2 rounded hover:bg-slate-50" onblur="handleBioUpdate()">Loading...</p>
-                    </div>
+                    <div class="bg-white p-8 rounded-2xl border shadow-sm mb-6"><div class="flex justify-between mb-4"><h3 class="font-bold">Bio</h3><button onclick="document.getElementById('prof-bio').focus()" class="text-blue-600 text-xs font-bold">EDIT</button></div><p id="prof-bio" contenteditable="true" class="text-slate-600 p-2 -ml-2 rounded hover:bg-slate-50" onblur="handleBioUpdate()">Loading...</p></div>
                 </div>
             </div>
         </main>
     </div>
 
-    <div id="data-modal" class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-        <div class="bg-white w-full max-w-lg rounded-2xl p-6 shadow-2xl animate-fade-up">
-            <div class="flex justify-between mb-4"><h3 class="font-bold text-xl" id="modal-title">Add Item</h3><button onclick="document.getElementById('data-modal').classList.add('hidden')"><i data-lucide="x"></i></button></div>
-            <div id="modal-fields" class="space-y-3"></div>
-            <input type="file" id="unified-file-input" class="hidden" onchange="handleFileUpload(this)">
-            <button id="modal-save" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl mt-6 hover:bg-blue-700">Save to Cloud</button>
+    <div id="data-modal" class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"><div class="bg-white w-full max-w-lg rounded-2xl p-6 shadow-2xl animate-fade-up"><div class="flex justify-between mb-4"><h3 class="font-bold text-xl" id="modal-title">Add Item</h3><button onclick="document.getElementById('data-modal').classList.add('hidden')"><i data-lucide="x"></i></button></div><div id="modal-fields" class="space-y-3"></div><input type="file" id="unified-file-input" class="hidden" onchange="handleFileUpload(this)"><button id="modal-save" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl mt-6 hover:bg-blue-700">Save to Cloud</button></div></div>
+
+    <div id="ticket-modal" class="hidden fixed inset-0 z-[300] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4 transition-all duration-300">
+        <div class="w-full max-w-xs md:max-w-sm bg-white rounded-3xl shadow-2xl overflow-hidden relative animate-fade-up transform transition-all hover:scale-[1.02]">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 pointer-events-none"></div>
+            <div class="absolute bottom-0 left-0 w-32 h-32 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 pointer-events-none"></div>
+            <button onclick="document.getElementById('ticket-modal').classList.add('hidden')" class="absolute top-4 right-4 z-20 text-white/70 hover:text-white bg-black/20 hover:bg-black/40 rounded-full p-1 transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <div class="bg-slate-900 p-8 text-white relative"><div class="relative z-10"><div class="inline-block px-2 py-1 rounded bg-blue-500/20 text-blue-300 text-[10px] font-bold tracking-widest uppercase mb-3 border border-blue-500/30">Admit One</div><h1 id="t-event-name" class="text-2xl font-bold leading-tight mb-1 text-white">Event</h1><p class="text-slate-400 text-xs font-medium">Official Event Pass</p></div></div>
+            <div class="p-6 relative z-10"><div class="flex justify-between items-start mb-6 border-b border-slate-100 pb-4"><div><p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1">Date</p><p id="t-date" class="font-bold text-slate-800 text-sm flex items-center"><i data-lucide="calendar" class="w-3 h-3 mr-1.5 text-blue-500"></i> <span id="t-date-text">--</span></p></div><div class="text-right"><p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1">Location</p><p id="t-loc" class="font-bold text-slate-800 text-sm flex items-center justify-end"><span id="t-loc-text">--</span> <i data-lucide="map-pin" class="w-3 h-3 ml-1.5 text-red-500"></i></p></div></div><div class="flex flex-col items-center justify-center mb-6"><div class="p-1 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-2xl shadow-lg"><div class="bg-white p-3 rounded-xl"><div id="qrcode"></div></div></div><p class="mt-3 text-[10px] text-slate-400 font-medium uppercase tracking-widest">Scan at Entrance</p></div><div class="bg-slate-50 rounded-xl p-4 border border-slate-100 text-center"><h3 id="t-student" class="text-sm font-bold text-slate-900">Student Name</h3><p id="t-id" class="text-xs font-mono text-slate-500 mt-1">ID: 000000</p></div></div>
         </div>
     </div>
 
-    <div id="ticket-modal" class="hidden fixed inset-0 z-[300] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-        <div class="bg-white w-full max-w-md rounded-3xl overflow-hidden shadow-2xl animate-fade-up relative">
-            <button onclick="document.getElementById('ticket-modal').classList.add('hidden')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800"><i data-lucide="x-circle" class="w-8 h-8"></i></button>
-            <div id="ticket-content" class="ticket-card p-0 bg-white">
-                <div class="bg-slate-900 p-6 text-center">
-                    <h2 class="text-white text-2xl font-bold tracking-widest uppercase">Event Pass</h2>
-                    <p class="text-slate-400 text-xs mt-1">ASA DEVS OFFICIAL ENTRY</p>
-                </div>
-                <div class="p-8">
-                    <h1 id="t-event-name" class="text-2xl font-bold text-slate-900 mb-2 leading-tight">Event Name</h1>
-                    <div class="flex items-center text-slate-500 text-sm mb-6 space-x-4">
-                        <span class="flex items-center"><i data-lucide="calendar" class="w-4 h-4 mr-1"></i> <span id="t-date">Date</span></span>
-                        <span class="flex items-center"><i data-lucide="map-pin" class="w-4 h-4 mr-1"></i> <span id="t-loc">Loc</span></span>
-                    </div>
-                    <div class="border-t border-dashed border-slate-300 py-6">
-                        <div class="flex flex-col items-center justify-center">
-                            <div id="qrcode" class="p-4 bg-white border-4 border-slate-900 rounded-xl mb-4"></div>
-                            <div class="text-center">
-                                <p class="text-xs font-bold text-slate-400 uppercase">Attendee</p>
-                                <p class="font-bold text-lg" id="t-student">Student Name</p>
-                                <p class="text-sm text-slate-500" id="t-id">ID: 123</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-red-50 text-red-600 p-3 rounded-xl text-xs font-bold text-center border border-red-100">
-                        <i data-lucide="alert-triangle" class="w-4 h-4 inline mr-1 mb-0.5"></i> 
-                        Do not share. QR Code is unique and valid for ONE scan only.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="scanner-modal" class="hidden fixed inset-0 z-[400] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4">
-        <div class="bg-white w-full max-w-md rounded-2xl overflow-hidden relative">
-            <button onclick="stopScanner()" class="absolute top-4 right-4 z-50 text-white bg-black/50 rounded-full p-1"><i data-lucide="x"></i></button>
-            <div id="reader" class="w-full h-64 bg-black"></div>
-            <div class="p-4 text-center">
-                <p class="font-bold">Scan Student QR Code</p>
-                <p class="text-xs text-slate-500">Align QR code within the frame</p>
-            </div>
-        </div>
-    </div>
+    <div id="scanner-modal" class="hidden fixed inset-0 z-[400] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"><div class="bg-white w-full max-w-md rounded-2xl overflow-hidden relative"><button onclick="stopScanner()" class="absolute top-4 right-4 z-50 text-white bg-black/50 rounded-full p-1"><i data-lucide="x"></i></button><div id="reader" class="w-full h-64 bg-black"></div><div class="p-4 text-center"><p class="font-bold">Scan QR</p><p class="text-xs text-slate-500">Align within frame</p></div></div></div>
 
     <input type="file" id="cert-upload-input" class="hidden" accept="image/*,.pdf">
 
-    <div id="resume-view" class="hidden fixed inset-0 z-[300] bg-slate-800 flex flex-col">
-        <div class="h-16 bg-slate-900 flex items-center justify-between px-6 shrink-0">
-            <button onclick="document.getElementById('resume-view').classList.add('hidden')" class="text-slate-400 hover:text-white flex items-center gap-2 font-bold text-sm"><i data-lucide="arrow-left"></i> Exit</button>
-            <button onclick="downloadPDF()" class="bg-white text-slate-900 px-4 py-2 rounded font-bold text-sm hover:bg-slate-200">Download PDF</button>
-        </div>
-        <div class="flex-1 overflow-auto p-8 flex justify-center bg-slate-800">
-            <div id="resume-paper" class="a4-page scale-[0.5] md:scale-[0.8] origin-top">
-                <div class="w-1/3 bg-slate-100 p-8 border-r"><div class="w-32 h-32 bg-slate-300 rounded-full mx-auto mb-6 overflow-hidden"><img id="res-img" class="w-full h-full object-cover hidden"><div class="w-full h-full flex items-center justify-center text-xs font-bold text-slate-500 uppercase cursor-pointer" onclick="document.getElementById('photo-input').click()">Add Photo</div></div><div class="space-y-4 text-sm"><div><h4 class="font-bold uppercase text-xs mb-1 border-b pb-1">Contact</h4><p contenteditable="true">Phone</p><p contenteditable="true">Email</p><p contenteditable="true">City</p></div><div><h4 class="font-bold uppercase text-xs mb-1 border-b pb-1">Skills</h4><ul contenteditable="true" class="list-disc pl-4"><li>Skill 1</li></ul></div></div></div>
-                <div class="w-2/3 p-10"><h1 contenteditable="true" class="text-4xl font-serif font-bold mb-2 uppercase text-slate-900">Name</h1><h2 contenteditable="true" class="text-sm font-bold tracking-widest text-blue-600 uppercase mb-8">Role</h2><div class="space-y-6"><div><h3 class="font-serif font-bold text-lg border-b pb-1 mb-2">Profile</h3><p contenteditable="true" class="text-sm text-slate-600">Summary...</p></div><div><h3 class="font-serif font-bold text-lg border-b pb-1 mb-2">Experience</h3><div contenteditable="true" class="text-sm text-slate-600"><p class="font-bold">Role | Company</p><p>Description...</p></div></div><div><h3 class="font-serif font-bold text-lg border-b pb-1 mb-2">Education</h3><div contenteditable="true" class="text-sm text-slate-600"><p class="font-bold">Degree | College</p><p>Year</p></div></div></div></div>
-            </div>
-        </div>
-        <input type="file" id="photo-input" class="hidden" onchange="loadPhoto(this)">
-    </div>
+    <div id="resume-view" class="hidden fixed inset-0 z-[300] bg-slate-800 flex flex-col"><div class="h-16 bg-slate-900 flex items-center justify-between px-6 shrink-0"><button onclick="document.getElementById('resume-view').classList.add('hidden')" class="text-slate-400 hover:text-white flex items-center gap-2 font-bold text-sm"><i data-lucide="arrow-left"></i> Exit</button><button onclick="downloadPDF()" class="bg-white text-slate-900 px-4 py-2 rounded font-bold text-sm hover:bg-slate-200">Download PDF</button></div><div class="flex-1 overflow-auto p-8 flex justify-center bg-slate-800"><div id="resume-paper" class="a4-page scale-[0.5] md:scale-[0.8] origin-top"><div class="w-1/3 bg-slate-100 p-8 border-r"><div class="w-32 h-32 bg-slate-300 rounded-full mx-auto mb-6 overflow-hidden"><img id="res-img" class="w-full h-full object-cover hidden"><div class="w-full h-full flex items-center justify-center text-xs font-bold text-slate-500 uppercase cursor-pointer" onclick="document.getElementById('photo-input').click()">Add Photo</div></div><div class="space-y-4 text-sm"><div><h4 class="font-bold uppercase text-xs mb-1 border-b pb-1">Contact</h4><p contenteditable="true">Phone</p><p contenteditable="true">Email</p><p contenteditable="true">City</p></div><div><h4 class="font-bold uppercase text-xs mb-1 border-b pb-1">Skills</h4><ul contenteditable="true" class="list-disc pl-4"><li>Skill 1</li></ul></div></div></div><div class="w-2/3 p-10"><h1 contenteditable="true" class="text-4xl font-serif font-bold mb-2 uppercase text-slate-900">Name</h1><h2 contenteditable="true" class="text-sm font-bold tracking-widest text-blue-600 uppercase mb-8">Role</h2><div class="space-y-6"><div><h3 class="font-serif font-bold text-lg border-b pb-1 mb-2">Profile</h3><p contenteditable="true" class="text-sm text-slate-600">Summary...</p></div><div><h3 class="font-serif font-bold text-lg border-b pb-1 mb-2">Experience</h3><div contenteditable="true" class="text-sm text-slate-600"><p class="font-bold">Role | Company</p><p>Description...</p></div></div><div><h3 class="font-serif font-bold text-lg border-b pb-1 mb-2">Education</h3><div contenteditable="true" class="text-sm text-slate-600"><p class="font-bold">Degree | College</p><p>Year</p></div></div></div></div></div></div><input type="file" id="photo-input" class="hidden" onchange="loadPhoto(this)"></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -435,26 +330,27 @@
         let isRegistering = false;
         let activeCertCourseId = null;
         let html5QrcodeScanner = null;
+        let dedicatedScanner = null;
         let editingId = null;
         let modalType = null;
         
         window.appData = { resources: [], courses: [], placement: [], events: [] };
         
         const ADMIN_EMAILS = ["master@asadevs.com", "842@asadevs.com", "395@asadevs.com", "617@asadevs.com", "204@asadevs.com", "573@asadevs.com"];
+        const SCANNER_EMAILS = ["scanner1@asadevs.com", "scanner2@asadevs.com", "scanner3@asadevs.com"];
 
-        // --- LOGIN & AUTH FIXES START HERE ---
+        // --- AUTH & LOGIN LOGIC ---
         window.setAuthMode = (mode) => {
             const container = document.getElementById('login-form-container');
             const selector = document.getElementById('role-selector');
             const title = document.getElementById('login-title');
             const sub = document.getElementById('login-subtitle');
             const regHint = document.getElementById('register-hint');
+            const emailLabel = document.getElementById('email-label');
 
-            // Toggle Views
             selector.classList.add('hidden');
             container.classList.remove('hidden');
 
-            // Reset Registration State
             isRegistering = false;
             document.getElementById('login-hint').classList.add('hidden');
             document.getElementById('auth-btn-text').innerText = "Access Portal";
@@ -462,14 +358,16 @@
             if (mode === 'student') {
                 title.innerText = "Student Login";
                 sub.innerText = "Enter your Student ID";
+                emailLabel.innerText = "Student ID";
                 regHint.classList.remove('hidden');
-                document.getElementById('auth-email').placeholder = "e.g. 202402001";
+                document.getElementById('auth-input').placeholder = "e.g. 202402001";
                 document.getElementById('login-type').value = 'student';
             } else {
                 title.innerText = "Faculty Login";
                 sub.innerText = "Authorized Personnel Only";
+                emailLabel.innerText = "Official Email";
                 regHint.classList.add('hidden');
-                document.getElementById('auth-email').placeholder = "faculty@asadevs.com";
+                document.getElementById('auth-input').placeholder = "faculty@asadevs.com";
                 document.getElementById('login-type').value = 'admin';
             }
         };
@@ -477,7 +375,7 @@
         window.resetAuth = () => {
             document.getElementById('login-form-container').classList.add('hidden');
             document.getElementById('role-selector').classList.remove('hidden');
-            document.getElementById('auth-email').value = '';
+            document.getElementById('auth-input').value = '';
             document.getElementById('auth-pass').value = '';
         };
 
@@ -500,7 +398,6 @@
                 logHint.classList.add('hidden');
             }
         };
-        // --- END LOGIN FIXES ---
 
         function isIdAllowed(idStr) {
             const id = parseInt(idStr);
@@ -508,16 +405,17 @@
             const bammc = [202310001, 202310003, 202310007, 202310009, 202310010, 202410001, 202410004, 202410005, 202410007, 202410008, 202410009, 202410011, 202410012, 202410014, 202410017, 202410019];
             if (bammc.includes(id)) return true;
             const ranges = [
-                [202501001, 202501072], [202401001, 202401073], [202301001, 202301052], // BSC
-                [202512001, 202512013], // MSC
-                [202505001, 202505072], [202505101, 202505172], [2024005001, 2024005072], [2024005101, 2024005171], [202305001, 202305076], // BSC DS
-                [202503001, 202503072], [202503101, 202503172], [202403001, 202403074], [202403101, 202403175], [202303001, 202303072], [202303101, 202303136], // BSC CS
-                [202513001, 202513024], // BMS
-                [202508001, 202508072], [202508101, 202508166], [202408001, 202408160], [202308001, 202308071], [202308103, 202308170], [202308203, 202308251], // BCOM
-                [202509001, 202509068], [202409001, 202409044], [202309001, 202309022], // BAF
-                [202502001, 202502072], [202502101, 202502172], [202502201, 202502260], // BSC IT FY
-                [202402001, 202402066], [202402101, 202402165], [202402201, 202402266], // BSC IT SY
-                [202302001, 202302072], [202302101, 202302184] // BSC IT TY
+                [202501001, 202501072], [202401001, 202401073], [202301001, 202301052],
+                [202512001, 202512013], [202505001, 202505072], [202505101, 202505172], 
+                [2024005001, 2024005072], [2024005101, 2024005171], [202305001, 202305076],
+                [202503001, 202503072], [202503101, 202503172], [202403001, 202403074], 
+                [202403101, 202403175], [202303001, 202303072], [202303101, 202303136],
+                [202513001, 202513024], [202508001, 202508072], [202508101, 202508166], 
+                [202408001, 202408160], [202308001, 202308071], [202308103, 202308170], 
+                [202308203, 202308251], [202509001, 202509068], [202409001, 202409044], 
+                [202309001, 202309022], [202502001, 202502072], [202502101, 202502172], 
+                [202502201, 202502260], [202402001, 202402066], [202402101, 202402165], 
+                [202402201, 202402266], [202302001, 202302072], [202302101, 202302184]
             ];
             return ranges.some(r => id >= r[0] && id <= r[1]);
         }
@@ -525,26 +423,41 @@
         onAuthStateChanged(auth, async (user) => {
             const loader = document.getElementById('global-loader');
             if (user) {
+                // Determine Role
+                let role = 'student';
+                if (ADMIN_EMAILS.includes(user.email)) role = 'admin';
+                if (SCANNER_EMAILS.includes(user.email)) role = 'scanner';
+
                 const docRef = doc(db, "users", user.uid);
                 const docSnap = await getDoc(docRef);
+                
                 if (docSnap.exists()) {
-                    currentUser = { ...docSnap.data(), uid: user.uid, email: user.email };
-                    currentUser.role = ADMIN_EMAILS.includes(user.email) ? 'admin' : 'student';
+                    currentUser = { ...docSnap.data(), uid: user.uid, email: user.email, role: role };
                     loginSuccess(currentUser);
                 } else {
-                    if (ADMIN_EMAILS.includes(user.email)) {
-                        const adminData = { name: "Faculty Admin", dept: "Administration", year: "Faculty", bio: "Authorized Faculty Administrator", email: user.email };
-                        await setDoc(docRef, adminData);
-                        currentUser = { ...adminData, uid: user.uid, role: 'admin' };
+                    // Auto-create profile for special roles if missing
+                    if (role !== 'student') {
+                        const profileData = { name: role === 'admin' ? "Faculty Admin" : "Security Officer", dept: "Staff", year: "N/A", bio: "Staff", email: user.email };
+                        await setDoc(docRef, profileData);
+                        currentUser = { ...profileData, uid: user.uid, role: role };
                         loginSuccess(currentUser);
                     } else {
+                        // Regular student onboarding
                         document.getElementById('auth-view').classList.add('hidden');
                         document.getElementById('onboarding-modal').classList.remove('hidden');
                     }
                 }
             } else {
+                // LOGOUT CLEANUP
+                if(dedicatedScanner) { dedicatedScanner.stop().catch(e=>console.log(e)); dedicatedScanner = null; }
                 document.getElementById('app-interface').classList.add('hidden');
+                document.getElementById('scanner-interface').classList.add('hidden'); // Hide scanner view
                 document.getElementById('auth-view').classList.remove('hidden');
+                document.getElementById('mobile-menu').classList.add('hidden'); 
+                document.getElementById('login-form-container').classList.add('hidden');
+                document.getElementById('role-selector').classList.remove('hidden');
+                document.getElementById('auth-input').value = '';
+                document.getElementById('auth-pass').value = '';
                 currentUser = null;
             }
             loader.classList.add('hidden');
@@ -552,29 +465,47 @@
 
         window.handleLoginSubmit = async (e) => {
             e.preventDefault();
-            const inputVal = document.getElementById('auth-email').value.trim();
+            const inputVal = document.getElementById('auth-input').value.trim();
             const pass = document.getElementById('auth-pass').value;
-            if(!inputVal || !pass) return Toastify({text: "Enter details", style: {background: "#ef4444"}}).showToast();
-            let email = inputVal;
-            const isAdmin = ADMIN_EMAILS.includes(inputVal);
-            const isNumeric = /^\d+$/.test(inputVal);
+            const loginType = document.getElementById('login-type').value;
 
-            if (isAdmin) { email = inputVal; } 
-            else if (isNumeric) {
-                if (!isIdAllowed(inputVal)) return Toastify({text: "Invalid Student ID. Access Denied.", style: {background: "#ef4444"}}).showToast();
-                email = `${inputVal}@asadevs.com`; 
+            if(!inputVal || !pass) return Toastify({text: "Enter details", style: {background: "#ef4444"}}).showToast();
+            
+            let email = inputVal;
+
+            if (loginType === 'student') {
+                // For students, ensure it's a number and valid
+                if (!/^\d+$/.test(inputVal)) {
+                    return Toastify({text: "Please enter a valid numeric Student ID", style: {background: "#ef4444"}}).showToast();
+                }
+                if (!isIdAllowed(inputVal)) {
+                    return Toastify({text: "Invalid Student ID. Access Denied.", style: {background: "#ef4444"}}).showToast();
+                }
+                // Construct the email automatically
+                email = `${inputVal}@asadevs.com`;
             } 
-            else { return Toastify({text: "Restricted Access. Login with Student ID only.", style: {background: "#ef4444"}}).showToast(); }
+            else if (loginType === 'admin') {
+                // For admin/scanner, use the full email entered
+                // Optional: Check if email is in allowed lists for earlier feedback
+                if (!ADMIN_EMAILS.includes(inputVal) && !SCANNER_EMAILS.includes(inputVal)) {
+                    // We let it pass to firebase to handle authentication errors, or we can block here
+                    // Keeping it flexible for now, but ensure user types full email
+                    if(!inputVal.includes('@')) {
+                         return Toastify({text: "Please enter full email address", style: {background: "#ef4444"}}).showToast();
+                    }
+                }
+                email = inputVal;
+            }
 
             try {
-                if(isRegistering) {
+                if(isRegistering && loginType === 'student') {
                     await createUserWithEmailAndPassword(auth, email, pass);
                     Toastify({text: "Account Created!", style: {background: "#10b981"}}).showToast();
                 } else {
                     await signInWithEmailAndPassword(auth, email, pass);
                     Toastify({text: "Logged In", style: {background: "#10b981"}}).showToast();
                 }
-            } catch (error) { Toastify({text: error.message, style: {background: "#ef4444"}}).showToast(); }
+            } catch (error) { Toastify({text: "Login Failed: Check ID/Email & Password", style: {background: "#ef4444"}}).showToast(); console.error(error); }
         };
 
         window.handleLogout = () => signOut(auth);
@@ -591,20 +522,33 @@
         };
 
         function loginSuccess(user) {
-            document.body.classList.toggle('is-admin', user.role === 'admin');
             document.getElementById('auth-view').classList.add('hidden');
-            document.getElementById('app-interface').classList.remove('hidden');
-            document.getElementById('sb-name').innerText = user.name;
-            document.getElementById('sb-avatar').innerText = user.name[0];
-            document.getElementById('home-name').innerText = user.name;
-            document.getElementById('prof-name').innerText = user.name;
-            document.getElementById('prof-meta').innerText = user.role === 'admin' ? 'Administrator' : `${user.dept} • ${user.year}`;
-            document.getElementById('prof-bio').innerText = user.bio || '';
-            navTo('home');
-            loadData();
+            
+            // --- ROUTING LOGIC ---
+            if (user.role === 'scanner') {
+                // SCANNER VIEW ONLY
+                document.getElementById('app-interface').classList.add('hidden'); 
+                document.getElementById('scanner-interface').classList.remove('hidden'); 
+                setTimeout(initDedicatedScanner, 500); // Wait for DOM to settle
+            } else {
+                // STANDARD DASHBOARD
+                document.getElementById('scanner-interface').classList.add('hidden');
+                document.getElementById('app-interface').classList.remove('hidden');
+                document.body.classList.toggle('is-admin', user.role === 'admin');
+                
+                document.getElementById('sb-name').innerText = user.name;
+                document.getElementById('sb-avatar').innerText = user.name[0];
+                document.getElementById('home-name').innerText = user.name;
+                document.getElementById('prof-name').innerText = user.name;
+                document.getElementById('prof-meta').innerText = user.role === 'admin' ? 'Administrator' : `${user.dept} • ${user.year}`;
+                document.getElementById('prof-bio').innerText = user.bio || '';
+                navTo('home');
+                loadData();
+            }
         }
 
         async function loadData() {
+            if(currentUser.role === 'scanner') return; // Security: Don't load data for scanners
             renderCollection('resources');
             renderCollection('courses');
             renderCollection('placement');
@@ -612,35 +556,174 @@
             if(currentUser.role === 'student') loadActivity();
         }
 
+        // --- DEDICATED SCANNER LOGIC ---
+        window.initDedicatedScanner = () => {
+            if(dedicatedScanner) return;
+            // Ensure element exists and is visible
+            const readerEl = document.getElementById("dedicated-reader");
+            if(!readerEl || readerEl.offsetParent === null) {
+                console.error("Scanner element hidden or missing");
+                return; 
+            }
+
+            const config = { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 };
+            dedicatedScanner = new Html5Qrcode("dedicated-reader");
+            dedicatedScanner.start({ facingMode: "environment" }, config, 
+                async (decodedText) => {
+                    dedicatedScanner.pause();
+                    await processTicket(decodedText);
+                },
+                (err) => { }
+            ).catch(err => { 
+                console.error(err);
+                alert("Camera Access Denied or Error. Please allow camera permissions and reload."); 
+            });
+        };
+
+        window.resetScannerUI = () => {
+            document.getElementById('scan-status-panel').classList.add('translate-y-full');
+            if(dedicatedScanner) dedicatedScanner.resume();
+        };
+
+        async function processTicket(qrString) {
+            const panel = document.getElementById('scan-status-panel');
+            const icon = document.getElementById('status-icon');
+            const title = document.getElementById('status-title');
+            const desc = document.getElementById('status-desc');
+            const details = document.getElementById('student-details');
+            
+            const setStatus = (type, mainTitle, subDesc, showDetails = false) => {
+                if(type === 'success') { icon.className = "w-16 h-16 rounded-full flex items-center justify-center mb-4 text-white shadow-lg text-3xl bg-green-500"; icon.innerHTML = '<i data-lucide="check"></i>'; }
+                if(type === 'error') { icon.className = "w-16 h-16 rounded-full flex items-center justify-center mb-4 text-white shadow-lg text-3xl bg-red-500"; icon.innerHTML = '<i data-lucide="x"></i>'; }
+                if(type === 'warn') { icon.className = "w-16 h-16 rounded-full flex items-center justify-center mb-4 text-white shadow-lg text-3xl bg-orange-500"; icon.innerHTML = '<i data-lucide="alert-triangle"></i>'; }
+                
+                title.innerText = mainTitle;
+                desc.innerText = subDesc;
+                details.classList.toggle('hidden', !showDetails);
+                panel.classList.remove('translate-y-full'); 
+                lucide.createIcons();
+            };
+
+            const parts = qrString.split('::');
+            if(parts.length !== 2) {
+                setStatus('error', 'Invalid Format', 'This QR code is not recognized.');
+                return;
+            }
+
+            const uid = parts[0];
+            const eventId = parts[1];
+
+            try {
+                const q = query(collection(db, "event_registrations"), where("uid", "==", uid), where("eventId", "==", eventId));
+                const snap = await getDocs(q);
+
+                if(snap.empty) {
+                    setStatus('error', 'Access Denied', 'No registration found for this event.');
+                } else {
+                    const docSnap = snap.docs[0];
+                    const data = docSnap.data();
+
+                    document.getElementById('sd-name').innerText = data.studentName;
+                    document.getElementById('sd-id').innerText = data.studentId;
+
+                    if (data.attended) {
+                        setStatus('warn', 'Already Scanned', `Scanned on: ${new Date(data.scannedAt || Date.now()).toLocaleTimeString()}`, true);
+                    } else {
+                        await updateDoc(doc(db, "event_registrations", docSnap.id), { 
+                            attended: true,
+                            scannedAt: new Date().toISOString(),
+                            scannedBy: currentUser.email
+                        });
+                        setStatus('success', 'Access Granted', 'Ticket verified successfully.', true);
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+                setStatus('error', 'System Error', 'Could not verify ticket. Check internet.');
+            }
+        }
+
         async function loadActivity() {
             const eventList = document.getElementById('my-events-list');
             const courseList = document.getElementById('my-courses-list');
             
+            // 1. Events
             const qEvents = query(collection(db, "event_registrations"), where("uid", "==", currentUser.uid));
             const snapEvents = await getDocs(qEvents);
             eventList.innerHTML = snapEvents.empty ? '<p class="text-sm text-slate-400">No events registered.</p>' : '';
             snapEvents.forEach(d => {
                 const ev = d.data();
-                eventList.innerHTML += `<div class="p-3 border rounded-xl flex justify-between items-center"><span class="font-bold text-sm">${ev.eventName}</span><button onclick="window.showTicket('${ev.eventId}', '${ev.eventName}')" class="text-xs bg-slate-900 text-white px-3 py-1.5 rounded-lg">View QR</button></div>`;
+                const safeName = ev.eventName.replace(/'/g, "\\'");
+                eventList.innerHTML += `<div class="p-3 border rounded-xl flex justify-between items-center mb-2"><span class="font-bold text-sm">${ev.eventName}</span><button onclick="window.showTicket('${ev.eventId}', '${safeName}')" class="text-xs bg-slate-900 text-white px-3 py-1.5 rounded-lg">View QR</button></div>`;
             });
 
-            const qCourses = query(collection(db, "course_completions"), where("uid", "==", currentUser.uid));
-            const snapCourses = await getDocs(qCourses);
-            courseList.innerHTML = snapCourses.empty ? '<p class="text-sm text-slate-400">No courses completed.</p>' : '';
-            snapCourses.forEach(d => {
-                courseList.innerHTML += `<div class="p-3 border rounded-xl border-green-100 bg-green-50 text-green-800 text-sm font-bold flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2"></i> Course Completed</div>`;
-            });
+            // 2. Active & Completed Courses
+            courseList.innerHTML = '';
+            const qEnrolled = query(collection(db, "course_enrollments"), where("uid", "==", currentUser.uid));
+            const snapEnrolled = await getDocs(qEnrolled);
+            
+            const qCompleted = query(collection(db, "course_completions"), where("uid", "==", currentUser.uid));
+            const snapCompleted = await getDocs(qCompleted);
+
+            const completedIds = snapCompleted.docs.map(d => d.data().courseId);
+
+            if (!snapEnrolled.empty) {
+                snapEnrolled.forEach(d => {
+                    const data = d.data();
+                    if (!completedIds.includes(data.courseId)) {
+                        const courseInfo = window.appData.courses.find(c => c.id === data.courseId);
+                        const title = courseInfo ? courseInfo.title : "Active Course";
+                        courseList.innerHTML += `<div class="p-3 border rounded-xl border-blue-100 bg-blue-50 text-blue-800 text-sm font-bold flex justify-between items-center mb-2"><span>${title}</span> <span class="text-[10px] uppercase bg-white px-2 py-1 rounded">In Progress</span></div>`;
+                    }
+                });
+            }
+
+            if (!snapCompleted.empty) {
+                snapCompleted.forEach(d => {
+                    const courseInfo = window.appData.courses.find(c => c.id === d.data().courseId);
+                    const title = courseInfo ? courseInfo.title : "Course";
+                    courseList.innerHTML += `<div class="p-3 border rounded-xl border-green-100 bg-green-50 text-green-800 text-sm font-bold flex items-center mb-2"><i data-lucide="check" class="w-4 h-4 mr-2"></i> ${title} - Completed</div>`;
+                });
+            }
+
+            if (courseList.innerHTML === '') courseList.innerHTML = '<p class="text-sm text-slate-400">No active or completed courses.</p>';
             lucide.createIcons();
         }
 
+        // --- NEW SHOW TICKET FUNCTION ---
         window.showTicket = (id, name) => {
             const studentID = currentUser.email.split('@')[0];
+            const eventData = window.appData.events.find(e => e.id === id);
+            
+            // Populate Ticket Data
             document.getElementById('t-event-name').innerText = name;
             document.getElementById('t-student').innerText = currentUser.name;
-            document.getElementById('t-id').innerText = studentID;
+            document.getElementById('t-id').innerText = `ID: ${studentID}`;
+            document.getElementById('t-date-text').innerText = eventData ? eventData.date : 'TBA';
+            document.getElementById('t-loc-text').innerText = eventData ? eventData.location : 'Campus';
+            
+            // Generate QR
             document.getElementById('qrcode').innerHTML = "";
-            new QRCode(document.getElementById("qrcode"), { text: `${currentUser.uid}::${id}`, width: 128, height: 128 });
+            new QRCode(document.getElementById("qrcode"), { text: `${currentUser.uid}::${id}`, width: 100, height: 100 });
+            
+            // Show Modal
             document.getElementById('ticket-modal').classList.remove('hidden');
+        };
+
+        window.startCourse = async (courseId, link) => {
+            window.open(link, '_blank');
+            const q = query(collection(db, "course_enrollments"), where("uid", "==", currentUser.uid), where("courseId", "==", courseId));
+            const snap = await getDocs(q);
+            if(snap.empty) {
+                await addDoc(collection(db, "course_enrollments"), { 
+                    uid: currentUser.uid, 
+                    courseId: courseId, 
+                    timestamp: new Date().toISOString() 
+                });
+                renderCollection('courses'); 
+                if(currentUser.role === 'student') loadActivity(); 
+                Toastify({text: "Course Started!", style: {background: "#10b981"}}).showToast();
+            }
         };
 
         window.filterGrid = (gridId, text) => {
@@ -663,25 +746,20 @@
             window.appData[colName] = items;
 
             let completions = [];
+            let enrollments = [];
             if(colName === 'courses' && currentUser.role === 'student') {
-                const q = query(collection(db, "course_completions"), where("uid", "==", currentUser.uid));
-                const cs = await getDocs(q);
-                cs.forEach(d => completions.push(d.data().courseId));
+                const qComp = query(collection(db, "course_completions"), where("uid", "==", currentUser.uid));
+                const csComp = await getDocs(qComp);
+                csComp.forEach(d => completions.push(d.data().courseId));
+
+                const qEnr = query(collection(db, "course_enrollments"), where("uid", "==", currentUser.uid));
+                const csEnr = await getDocs(qEnr);
+                csEnr.forEach(d => enrollments.push(d.data().courseId));
             }
 
-            // MODIFIED: Update dashboard stats for EVERYONE, not just admins
-            if(colName === 'resources') {
-                const el = document.getElementById('stat-res');
-                if(el) el.innerText = items.length;
-            }
-            if(colName === 'courses') {
-                const el = document.getElementById('stat-course');
-                if(el) el.innerText = items.length;
-            }
-            if(colName === 'placement') {
-                const el = document.getElementById('stat-job');
-                if(el) el.innerText = items.length;
-            }
+            if(colName === 'resources') document.getElementById('stat-res').innerText = items.length;
+            if(colName === 'courses') document.getElementById('stat-course').innerText = items.length;
+            if(colName === 'placement') document.getElementById('stat-job').innerText = items.length;
 
             grid.innerHTML = '';
             if(!items.length) { grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500 font-medium bg-white/60 border-2 border-dashed border-slate-300 rounded-xl">No ${colName} found.</div>`; return; }
@@ -703,17 +781,23 @@
                 else if (colName === 'courses') {
                      const bg = item.image ? `background-image: url('${item.image}');` : `background: #1e293b;`;
                      const isCompleted = completions.includes(item.id);
+                     const isEnrolled = enrollments.includes(item.id);
                      const completedStyle = isCompleted ? 'border-green-500 border-2' : 'border-white/50';
                      const badgeColor = item.mode === 'Online' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700';
                      const costBadge = item.cost === 'Paid' ? 'bg-yellow-100 text-yellow-700 border-yellow-200' : 'bg-blue-100 text-blue-700 border-blue-200';
                      const costText = item.cost || 'Free';
+                     
                      let actions = '';
                      if(currentUser.role === 'student') {
                         if (isCompleted) {
                             actions = `<div class="mt-3 bg-green-50 text-green-600 py-2 rounded-lg text-sm font-bold text-center flex items-center justify-center gap-2 animate-pulse"><i data-lucide="check-circle" class="w-4 h-4"></i> Completed</div>`;
+                        } else if (isEnrolled) {
+                            actions = `<div class="mt-3"><div class="flex gap-2"><button onclick="triggerCertUpload('${item.id}')" class="flex-1 bg-blue-50 text-blue-600 py-2 rounded-lg text-xs font-bold hover:bg-blue-100 transition-all transform hover:scale-105">Upload Cert</button><button onclick="discontinueCourse('${item.id}', this)" class="w-1/3 bg-red-50 text-red-500 py-2 rounded-lg text-xs font-bold hover:bg-red-100 transition-all transform hover:scale-105">Drop</button></div><a href="${item.link}" target="_blank" class="block text-center mt-2 text-xs text-slate-400 hover:text-slate-600 hover:underline">Continue Learning &rarr;</a></div>`;
                         } else {
-                            let mainBtn = (item.cost === 'Paid' && item.paymentUrl) ? `<a href="${item.paymentUrl}" target="_blank" class="block text-center w-full bg-yellow-500 text-white py-2 rounded-lg text-sm font-bold hover:bg-yellow-600 transition-all transform hover:scale-105 active:scale-95 mb-2">Enroll Now</a>` : `<a href="${item.link}" target="_blank" class="block text-center w-full bg-slate-900 text-white py-2 rounded-lg text-sm font-bold hover:bg-slate-800 transition-all transform hover:scale-105 active:scale-95 mb-2">Start Course</a>`;
-                            actions = `<div class="mt-3">${mainBtn}<div class="flex gap-2"><button onclick="triggerCertUpload('${item.id}')" class="flex-1 bg-blue-50 text-blue-600 py-2 rounded-lg text-xs font-bold hover:bg-blue-100 transition-all transform hover:scale-105">Upload Cert</button><button onclick="discontinueCourse('${item.id}', this)" class="w-1/3 bg-red-50 text-red-500 py-2 rounded-lg text-xs font-bold hover:bg-red-100 transition-all transform hover:scale-105">Drop</button></div></div>`;
+                            let btnColor = (item.cost === 'Paid') ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-slate-900 hover:bg-slate-800';
+                            let btnText = (item.cost === 'Paid') ? 'Enroll Now' : 'Start Course';
+                            let targetLink = (item.cost === 'Paid' && item.paymentUrl) ? item.paymentUrl : item.link;
+                            actions = `<div class="mt-3"><button onclick="window.startCourse('${item.id}', '${targetLink}')" class="block text-center w-full ${btnColor} text-white py-2 rounded-lg text-sm font-bold transition-all transform hover:scale-105 active:scale-95 mb-2">${btnText}</button></div>`;
                         }
                      }
                      content = `<div class="grid-item card-3d bg-white/90 backdrop-blur-sm rounded-xl border shadow-sm relative flex flex-col overflow-hidden ${completedStyle}" id="course-card-${item.id}">${adminBtns}<div class="h-32 bg-cover bg-center bg-slate-800 transform transition-transform hover:scale-110" style="${bg}"><span class="absolute top-2 right-2 border ${costBadge} text-[10px] font-bold uppercase px-2 py-1 rounded shadow-sm z-10">${costText}</span></div><div class="p-5 flex-1 flex flex-col"><div class="flex justify-between items-start mb-2"><h3 class="font-bold text-lg leading-tight">${item.title}</h3><span class="text-[10px] font-bold uppercase px-2 py-1 rounded ${badgeColor} transform transition-transform hover:scale-110">${item.mode || 'Online'}</span></div><p class="text-sm text-slate-500 mb-4 flex-1">${item.desc}</p>${actions}</div></div>`;
@@ -731,7 +815,16 @@
                     const safeId = item.id;
                     let btn = '';
                     if(currentUser.role === 'student') btn = `<button onclick="window.joinEvent('${safeId}', '${safeName}', ${currentCount}, ${limit})" class="w-full bg-slate-100 py-2 rounded-lg text-sm font-bold hover:bg-slate-200 transition-all transform hover:scale-105 active:scale-95">Register</button>`;
-                    else if (currentUser.role === 'admin') btn = `<button onclick="window.exportEventData('${safeId}', '${safeName}')" class="w-full bg-green-100 text-green-700 py-2 rounded-lg text-sm font-bold hover:bg-green-200 transition-all flex items-center justify-center gap-2"><i data-lucide="download" class="w-4 h-4"></i> Download Excel</button>`;
+                    else if (currentUser.role === 'admin') btn = `
+                    <div class="flex flex-col gap-2 mt-2">
+                        <button onclick="window.exportEventData('${safeId}', '${safeName}')" class="w-full bg-slate-100 text-slate-700 py-2 rounded-lg text-xs font-bold hover:bg-slate-200 transition-all flex items-center justify-center gap-2">
+                            <i data-lucide="file-spreadsheet" class="w-3 h-3"></i> Registration List
+                        </button>
+                        <button onclick="window.exportAttendanceData('${safeId}', '${safeName}')" class="w-full bg-green-100 text-green-700 py-2 rounded-lg text-xs font-bold hover:bg-green-200 transition-all flex items-center justify-center gap-2">
+                            <i data-lucide="check-circle" class="w-3 h-3"></i> Attendance Report
+                        </button>
+                    </div>
+                    `;
                     const clickAction = item.image ? `onclick="viewImage('${item.image}')"` : '';
                     const cursorClass = item.image ? 'cursor-zoom-in' : '';
                     content = `<div class="grid-item card-3d bg-white/90 backdrop-blur-sm rounded-xl border border-white/50 shadow-3d overflow-hidden relative group glow-on-hover hover:border-blue-400">${adminBtns}<div ${clickAction} class="h-32 flex items-center justify-center text-white/30 font-bold text-xl relative transform transition-transform hover:scale-110 ${cursorClass}" style="${bgStyle}"></div><div class="p-4"><h3 class="font-bold text-lg">${item.name}</h3><p class="text-xs text-slate-500 mb-3 line-clamp-2">${item.desc || ''}</p><div class="text-sm text-slate-500 mb-3 space-y-1"><p><i data-lucide="map-pin" class="w-3 h-3 inline mr-1"></i> ${item.location || 'TBA'}</p><p><i data-lucide="calendar" class="w-3 h-3 inline mr-1"></i> ${item.date}</p></div>${btn}</div></div>`;
@@ -806,13 +899,15 @@
             Toastify({text: "Registered Successfully!", style: {background: "#10b981"}}).showToast();
         };
 
+        // --- EXPORT 1: REGISTRATION LIST (ALL) ---
         window.exportEventData = async (eventId, eventName) => {
             if (currentUser.role !== 'admin') return;
-            Toastify({text: "Generating Report...", style: {background: "#3b82f6"}}).showToast();
+            Toastify({text: "Fetching Registrations...", style: {background: "#3b82f6"}}).showToast();
             try {
                 const q = query(collection(db, "event_registrations"), where("eventId", "==", eventId));
                 const querySnapshot = await getDocs(q);
                 if (querySnapshot.empty) return alert("No registrations yet.");
+                
                 let csvContent = "Student ID,Full Name,Department,Year,Registration Date\n"; 
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
@@ -820,17 +915,49 @@
                     const row = `"${data.studentId}","${data.studentName}","${data.dept}","${data.year}","${date}"`;
                     csvContent += row + "\n";
                 });
-                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement("a");
-                link.setAttribute("href", url);
-                link.setAttribute("download", `${eventName.replace(/[^a-z0-9]/gi, '_')}_List.csv`);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url); 
+                
+                downloadCSV(csvContent, `${eventName.replace(/[^a-z0-9]/gi, '_')}_REGISTRATIONS.csv`);
             } catch (error) { alert("Failed to export data: " + error.message); }
         };
+
+        // --- EXPORT 2: ATTENDANCE REPORT (SCANNED ONLY) ---
+        window.exportAttendanceData = async (eventId, eventName) => {
+            if (currentUser.role !== 'admin') return;
+            Toastify({text: "Fetching Attendance...", style: {background: "#16a34a"}}).showToast();
+            try {
+                const q = query(collection(db, "event_registrations"), where("eventId", "==", eventId));
+                const querySnapshot = await getDocs(q);
+                
+                // Filter for attended only
+                const attendees = querySnapshot.docs.filter(doc => doc.data().attended === true);
+
+                if (attendees.length === 0) return alert("No students have been scanned for this event yet.");
+                
+                let csvContent = "Student ID,Full Name,Department,Year,Scan Time,Scanned By\n";
+                
+                attendees.forEach((doc) => {
+                    const data = doc.data();
+                    const scanTime = data.scannedAt ? new Date(data.scannedAt).toLocaleString() : "Manual Entry";
+                    const scanner = data.scannedBy || "System";
+                    const row = `"${data.studentId}","${data.studentName}","${data.dept}","${data.year}","${scanTime}","${scanner}"`;
+                    csvContent += row + "\n";
+                });
+
+                downloadCSV(csvContent, `${eventName.replace(/[^a-z0-9]/gi, '_')}_ATTENDANCE.csv`);
+            } catch (error) { alert("Error: " + error.message); }
+        };
+
+        // Helper for CSV Download
+        function downloadCSV(csvContent, fileName) {
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", fileName);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
 
         window.triggerCertUpload = (courseId) => {
             activeCertCourseId = courseId;
@@ -842,16 +969,26 @@
                 await addDoc(collection(db, "course_completions"), { uid: currentUser.uid, courseId: activeCertCourseId, date: new Date().toISOString() });
                 Toastify({text: "Certificate Uploaded!", style: {background: "#10b981"}}).showToast();
                 renderCollection('courses');
+                if(currentUser.role === 'student') loadActivity(); 
                 activeCertCourseId = null;
             }
         });
 
-        window.discontinueCourse = (courseId, btn) => {
+        window.discontinueCourse = async (courseId, btn) => {
             if(confirm("Are you sure you want to drop this course?")) {
+                const q = query(collection(db, "course_enrollments"), where("uid", "==", currentUser.uid), where("courseId", "==", courseId));
+                const snap = await getDocs(q);
+                snap.forEach(async (d) => await deleteDoc(doc(db, "course_enrollments", d.id)));
+                
                 const card = document.getElementById(`course-card-${courseId}`);
-                card.style.opacity = '0.5';
-                btn.parentElement.innerHTML = '<span class="text-xs text-red-400 font-bold">Dropped</span>';
+                if(card) card.style.opacity = '0.5';
+                if(btn) btn.parentElement.innerHTML = '<span class="text-xs text-red-400 font-bold">Dropped</span>';
+                
                 Toastify({text: "Course Dropped", style: {background: "#64748b"}}).showToast();
+                setTimeout(() => {
+                    renderCollection('courses');
+                    if(currentUser.role === 'student') loadActivity();
+                }, 1000);
             }
         };
 
@@ -889,13 +1026,13 @@
                         }
                     }
                 },
-                (errorMessage) => { /* ignore parse errors */ }
+                (errorMessage) => { }
             ).catch(err => { console.log(err); });
-        }
+        };
         window.stopScanner = () => {
             if(html5QrcodeScanner) html5QrcodeScanner.stop().then(() => document.getElementById('scanner-modal').classList.add('hidden'));
             else document.getElementById('scanner-modal').classList.add('hidden');
-        }
+        };
 
         window.openModal = (type) => {
             modalType = type;
