@@ -1,20 +1,58 @@
 {
-    "name": "ASA Devs Portal",
-    "short_name": "ASA Devs",
-    "start_url": "index.html",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#2563eb",
-    "icons": [
-        {
-            "src": "logo.png",
-            "sizes": "192x192",
-            "type": "image/png"
-        },
-        {
-            "src": "logo.png",
-            "sizes": "512x512",
-            "type": "image/png"
-        }
-    ]
+  "name": "ASA Devs Training & Placement Portal",
+  "short_name": "ASA Devs Portal",
+  "description": "Official Training and Placement Portal for ASA Devs students. Access courses, resources, job opportunities, and events.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%232563eb' width='192' height='192' rx='45'/><text x='96' y='110' font-size='100' font-weight='bold' fill='white' text-anchor='middle' font-family='system-ui'>A</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%232563eb' width='512' height='512' rx='120'/><text x='256' y='290' font-size='280' font-weight='bold' fill='white' text-anchor='middle' font-family='system-ui'>A</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "shortcuts": [
+    {
+      "name": "View Placements",
+      "short_name": "Placements",
+      "description": "Browse job opportunities and internships",
+      "url": "/?tab=placement"
+    },
+    {
+      "name": "Explore Courses",
+      "short_name": "Courses",
+      "description": "Access training courses and certifications",
+      "url": "/?tab=courses"
+    },
+    {
+      "name": "Events",
+      "short_name": "Events",
+      "description": "Check upcoming events and seminars",
+      "url": "/?tab=events"
+    }
+  ]
 }
